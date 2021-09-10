@@ -9,7 +9,7 @@ const App = () => {
   return (
     <div className="App">
       <Header onSearch={getContent} />
-      <h1>Simple content list</h1>
+      <h1 style={{marginTop: '160px'}}>Simple content list</h1>
       <ContentList content={content} />
       {/* TODO: Put FetchMoreButton component here */}
     </div>
