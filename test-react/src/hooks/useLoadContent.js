@@ -3,27 +3,36 @@ import axios from "axios";
 
 export const useLoadContent = () => {
   const [imgList, setImgList] = useState([]);
+  const [page, setPage] = useState(1);
   const getContent = useCallback(async (value) => {
     try {
-      if(value) {
+      if (value) {
         const response = await axios.get(
           `https://rickandmortyapi.com/api/character/?name=${value}`
         );
+        setPage(1);
         setImgList(response.data.results);
-      }
-      else {
+      } else {
         const response = await axios.get(
-          `https://rickandmortyapi.com/api/character/[1,2,3,4,5,6,7,8,9,10]`
+          `https://rickandmortyapi.com/api/character/`
         );
-        setImgList(response.data);
+        setPage(2);
+        setImgList(response.data.results);
       }
     } catch (e) {
       alert("Wrong value, please enter the character name");
     }
-    /* TODO: fetch images from this url: https://rickandmortyapi.com/api/character/
-      (to fetch with name add name in search query: https://rickandmortyapi.com/api/character/?name=rick)
-    */
   }, []);
-  // TODO: Put fetchMore method here
-  return [imgList, getContent];
+  const fetchMore = useCallback(async () => {
+    try {
+      const response = await axios.get(
+        `https://rickandmortyapi.com/api/character/?page=${page}`
+      );
+      setPage(page + 1);
+      setImgList(response.data.results);
+    } catch (e) {
+      console.log(e);
+    }
+  }, [page]);
+  return [imgList, getContent, fetchMore];
 };
